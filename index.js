@@ -1,6 +1,8 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
 
 morgan.token('POST-body', (req, res) => {
   return req.method === "POST" ?
@@ -51,7 +53,9 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons)
+  Person.find({}).then(result => {
+    res.json(result.map(person => person.toJSON()))
+  })
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -73,22 +77,19 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 app.post('/api/persons', (req, res) => {
-  const person = req.body
-  if( !person.name || !person.number ) {
-    return res.status(400).json({
-      error: 'content missing'
-    })
-  }
-  if(persons.find(p => p.name === person.name)) {
-    return res.status(400).json({
-      error: `Person ${person.name} already exists, name must be unique`
-    })
-  }
+  const body = req.body
 
-  person.id = Math.floor(1000000*Math.random())
-  persons = persons.concat(person)
-  res.json(person)
-  
+  if (body.name === undefined || body.number === undefined) {
+    return res.status(400).json({ error: 'content missing' })
+  }
+  const person = new Person({
+    name: body.name,
+    number: body.number
+  })
+
+  person.save().then(savedPerson => {
+    res.json(savedPerson.toJSON())
+  })
 })
 
 const PORT = process.env.PORT || 3001
