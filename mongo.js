@@ -21,24 +21,21 @@ switch (process.argv.length) {
   case 3:
     {
       Person.find({}).then(result => {
-        console.log('phonebook:');
-        
-        result.forEach(person => {
-          console.log(`${person.name} ${person.number}`)
-        })
+        console.log('phonebook:')
+        result.forEach(person => console.log(`${person.name} ${person.number}`)
+        )
         mongoose.connection.close()
-      })
+      })    
     }
     break;
   case 5:
     {
       const person = new Person({
         name: process.argv[3],
-        number: process.argv[4],
+        number: process.argv[4]
       })
       person.save().then(response => {
-        console.log('person saved!')
-        console.log(`added ${response.name} ${response.number} to phonebook`)
+        console.log(`added ${response.name} number ${response.number} to phonebook`)
         mongoose.connection.close()
       })
     }
@@ -46,5 +43,5 @@ switch (process.argv.length) {
   default:
     {
       mongoose.connection.close()
-    }
+    } 
 }
