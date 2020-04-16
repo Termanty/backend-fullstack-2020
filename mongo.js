@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 if (process.argv.length < 3) {
-  console.log('give password as argument');
-  process.exit(1);
+  console.log('give password as argument')
+  process.exit(1)
 }
 
-const password = process.argv[2];
+const password = process.argv[2]
 const url = `mongodb+srv://fullstack:${password}@cluster0-pmque.mongodb.net/phonebook?retryWrites=true`
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -25,9 +25,9 @@ switch (process.argv.length) {
         result.forEach(person => console.log(`${person.name} ${person.number}`)
         )
         mongoose.connection.close()
-      })    
+      })
     }
-    break;
+    break
   case 5:
     {
       const person = new Person({
@@ -39,9 +39,7 @@ switch (process.argv.length) {
         mongoose.connection.close()
       })
     }
-    break;
+    break
   default:
-    {
-      mongoose.connection.close()
-    } 
+    mongoose.connection.close()
 }

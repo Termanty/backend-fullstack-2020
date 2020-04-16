@@ -4,8 +4,8 @@ const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
 
-morgan.token('POST-body', (req, res) => {
-  return req.method === "POST" ?
+morgan.token('POST-body', (req) => {
+  return req.method === 'POST' ?
     JSON.stringify(req.body) :
     ''
 })
@@ -19,7 +19,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :P
 app.get('/info', (req, res) => {
   Person.find({}).then(result => {
     const time = Date()
-    const response = 
+    const response =
       `<p>Phonebook has info for ${result.length} people</p>
        <p>${time}</p>`
     res.send(response)
@@ -48,7 +48,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 app.delete('/api/persons/:id', (req, res, next) => {
   Person
     .findByIdAndRemove(req.params.id)
-    .then(result => {
+    .then( () => {
       res.status(204).end()
     })
     .catch(error => next(error))
@@ -65,8 +65,8 @@ app.put('/api/persons/:id', (req, res, next) => {
     .findByIdAndUpdate(req.params.id, person, { new: true })
     .then(updatedPerson => {
       console.log('updated: ')
-      console.log(updatedPerson.toJSON());
-      
+      console.log(updatedPerson.toJSON())
+
       res.json(updatedPerson.toJSON())
     })
     .catch(error => next(error))
